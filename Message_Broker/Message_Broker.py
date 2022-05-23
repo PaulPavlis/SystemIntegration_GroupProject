@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import constants as keys
 from telegram.ext import *
 from activemq_publish_handler import send_message_2_queue
@@ -5,6 +6,8 @@ import json
 import _thread
 import time
 from activemq_subscribe_handler import get_activemq_subscriber
+
+current_chat_id = 540612511
 
 
 def get_json_message_lamp(brightness=100, colour_hexa="FFFFFF", effect=""):
@@ -19,23 +22,44 @@ def get_send_details(user_message):
     destinations = "not_declared"
     json_message = "not_declared"
     telegram_answer = "not_declared"
+    user_message_list = str(user_message).split()
 
-    if user_message == "lamp1 on":
-        destinations = ["/topic/topic_lamp1"]
-        json_message = get_json_message_lamp(100, "FFFFFF", "")
-        telegram_answer = "Sent command to lamp1."
-    elif user_message == "lamp2 on":
-        destinations = ["/topic/topic_lamp2"]
-        json_message = get_json_message_lamp(100, "FFFFFF", "")
-        telegram_answer = "Sent command to lamp2."
-    elif user_message == "all_lamps on":
-        destinations = ["/topic/topic_all_lamps"]
-        json_message = get_json_message_lamp(100, "FFFFFF", "")
-        telegram_answer = "Sent command to all lamps."
-    else:
+    try:
+        if "lamp" not in user_message_list[0]:
+            return (None, None, None)
+
+        if user_message_list[1].isnumeric():
+            destinations = ["/topic/topic_lamp" + str(user_message_list[1])]
+            telegram_answer = "Sent command to lamp " + \
+                str(user_message_list[1]) + "."
+        elif "all" in user_message_list[1]:
+            destinations = ["/topic/topic_all_lamps"]
+            telegram_answer = "Sent command to all lamps."
+        else:
+            return (None, None, None)
+
+        brightness = -1
+        if "on" in user_message_list[2]:
+            brightness = 100
+        elif "off" in user_message_list[2]:
+            brightness = 0
+        else:
+            return (None, None, None)
+
+        colour = "FFFFFF"  # default is white
+        if len(user_message_list) >= 4:
+            colour = user_message_list[3]
+
+        effect = "None"  # default is None
+        if len(user_message_list) >= 5:
+            effect = user_message_list[4]
+
+        json_message = get_json_message_lamp(brightness, colour, effect)
+
+        return (destinations, json_message, telegram_answer)
+    except Exception as e:
+        print("An error occured in the parsing of the user message: " + str(e))
         return (None, None, None)
-
-    return (destinations, json_message, telegram_answer)
 
 
 def handle_message(update, context):
@@ -47,6 +71,7 @@ def handle_message(update, context):
      telegram_answer) = get_send_details(user_message)
 
     if destinations is None:
+        print("Threw away message because it could not be parsed correctly.")
         update.message.reply_text(
             "This is not a correct command. Type /help for more information.")
     else:
@@ -59,6 +84,10 @@ def handle_message(update, context):
 
 
 def start_command(update, context):
+
+    if update.message.chat_id is not None:
+        current_chat_id = update.message.chat_id
+
     update.message.reply_text("Hello, I am the System Integration Bot")
 
 
@@ -80,8 +109,7 @@ def keep_telegram_handler_open(updater, ):
 
 def receive_activemq_messages(updater, ):
 
-    # conn = get_activemq_subscriber(updater.message.reply_text)
-    conn = get_activemq_subscriber(print)
+    conn = get_activemq_subscriber(updater.bot.sendMessage, current_chat_id)
 
     print("MessageBroker (ActiveMQ Receiver) started ...")
     while 1:

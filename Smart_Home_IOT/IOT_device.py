@@ -33,6 +33,7 @@ class MyIOTListener(stomp.ConnectionListener):
         }
 
     def on_message(self, header, body):
+        print(f"Received ActiveMQ message (Header): {header}")
         print(f"Received ActiveMQ message: {body}")
         # TODO: Implement Business Logic
         config_text = self.parse_json_to_text(json.loads(body))
