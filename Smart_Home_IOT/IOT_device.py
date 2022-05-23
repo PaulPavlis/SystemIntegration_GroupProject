@@ -29,12 +29,12 @@ class MyIOTListener(stomp.ConnectionListener):
 
     def get_return_json(self):
         return {
-            "message": f"IOT Device {self.name} was started."
+            "message": f"IOT Device {self.name} updated."
         }
 
     def on_message(self, header, body):
         print(f"Received ActiveMQ message (Header): {header}")
-        print(f"Received ActiveMQ message: {body}")
+        print(f"Received ActiveMQ message (Body): {body}")
         # TODO: Implement Business Logic
         config_text = self.parse_json_to_text(json.loads(body))
         time.sleep(random.randint(2, 5))

@@ -17,7 +17,7 @@ class MyIOTListener(object):
         print(f"Received an error: {message}")
 
     def parse_json_to_text(self, json_dict):
-        return f"Return Message: {json_dict['message']}"
+        return f"Received message from IOT Device: {json_dict['message']}"
 
     def on_message(self, header, body):
         print(f"Received ActiveMQ message: {body}")
