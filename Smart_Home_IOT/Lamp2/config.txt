@@ -1,3 +1,0 @@
-Brightness: 100
-Colour: FFFFFF
-Special Effect: 
