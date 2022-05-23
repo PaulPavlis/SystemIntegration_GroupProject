@@ -7,6 +7,8 @@ python-telegram-bot==13.11
 stomp.py==4.1.21
 ```
 
+You also need to install apache activemq. It is tested with version 5.17.1 (https://activemq.apache.org/components/classic/download/)
+
 # ActiveMQ
 
 ### Start ActiveMQ
