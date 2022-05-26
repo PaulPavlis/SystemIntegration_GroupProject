@@ -38,7 +38,9 @@ def get_send_details(user_message):
             return (None, None, None)
 
         brightness = -1
-        if "on" in user_message_list[2]:
+        if user_message_list[2].isnumeric():
+            brightness = user_message_list[2]
+        elif "on" in user_message_list[2]:
             brightness = 100
         elif "off" in user_message_list[2]:
             brightness = 0
