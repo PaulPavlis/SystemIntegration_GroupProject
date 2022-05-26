@@ -1,5 +1,6 @@
 .vscode
 apache-activemq-5.17.1
+*.txt
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
