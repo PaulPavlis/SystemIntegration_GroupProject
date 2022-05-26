@@ -35,9 +35,9 @@ class MyIOTListener(stomp.ConnectionListener):
     def on_message(self, header, body):
         print(f"Received ActiveMQ message (Header): {header}")
         print(f"Received ActiveMQ message (Body): {body}")
-        # TODO: Implement Business Logic
+
         config_text = self.parse_json_to_text(json.loads(body))
-        time.sleep(random.randint(2, 5))
+        time.sleep(random.randint(1, 2))
         write_message_to_file("config.txt",
                               "Smart_Home_IOT\\" + str(self.name).replace(" ", ""), config_text)
         print(f"Changed IOT device according to message.")
@@ -66,7 +66,6 @@ if __name__ == "__main__":
     id_counter = 1
     for subscribe_topic in args.subscribe_topic_list:
         conn.subscribe(destination=subscribe_topic,
-                       #    headers={}, id=id_counter, ack='auto')
                        headers={}, id=id_counter, ack='auto')
         id_counter += 1
 

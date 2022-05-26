@@ -6,8 +6,7 @@ import json
 import _thread
 import time
 from activemq_subscribe_handler import get_activemq_subscriber
-
-current_chat_id = 540612511
+from file_handler import write_message_to_file, read_message_from_file
 
 
 def get_json_message_lamp(brightness=100, colour_hexa="FFFFFF", effect=""):
@@ -63,6 +62,11 @@ def get_send_details(user_message):
 
 
 def handle_message(update, context):
+
+    if update.message.chat_id is not None:
+        write_message_to_file(
+            keys.FILE_NAME, keys.FILE_LOCATION, update.message.chat_id)
+
     user_message = str(update.message.text).lower()
 
     print(f"Received Telegram message: {user_message}")
@@ -86,9 +90,10 @@ def handle_message(update, context):
 def start_command(update, context):
 
     if update.message.chat_id is not None:
-        current_chat_id = update.message.chat_id
+        write_message_to_file(
+            keys.FILE_NAME, keys.FILE_LOCATION, update.message.chat_id)
 
-    update.message.reply_text("Hello, I am the System Integration Bot")
+    update.message.reply_text("Hello, I am the System Integration Bot.")
 
 
 def help_command(update, context):
@@ -109,7 +114,8 @@ def keep_telegram_handler_open(updater, ):
 
 def receive_activemq_messages(updater, ):
 
-    conn = get_activemq_subscriber(updater.bot.sendMessage, current_chat_id)
+    conn = get_activemq_subscriber(
+        updater.bot.sendMessage, read_message_from_file, keys.FILE_NAME, keys.FILE_LOCATION)
 
     print("MessageBroker (ActiveMQ Receiver) started ...")
     while 1:
