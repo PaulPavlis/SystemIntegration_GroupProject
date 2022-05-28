@@ -39,7 +39,7 @@ class MyIOTListener(stomp.ConnectionListener):
 
         message_body = json.loads(body)
         config_text = self.parse_json_to_text(message_body['data'])
-        time.sleep(random.randint(1, 2))
+        time.sleep(random.randint(3, 7))
         write_message_to_file("config.txt",
                               "Smart_Home_IOT\\" + str(self.name).replace(" ", ""), config_text)
         print(f"Changed IOT device according to message.")
