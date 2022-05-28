@@ -6,7 +6,7 @@ import json
 import _thread
 import time
 from activemq_subscribe_handler import get_activemq_subscriber
-from file_handler import write_message_to_file, read_message_from_file
+from file_handler import write_message_to_file  # , read_message_from_file
 
 
 def get_json_message_lamp(brightness=100, colour_hexa="FFFFFF", effect=""):
@@ -76,6 +76,13 @@ def handle_message(update, context):
     (destinations, json_message,
      telegram_answer) = get_send_details(user_message)
 
+    json_message = {
+        "telegram_id": update.message.chat_id,
+        "data": json_message
+    }
+
+    print("New Message with id: ", json_message)
+
     if destinations is None:
         print("Threw away message because it could not be parsed correctly.")
         update.message.reply_text(
@@ -116,8 +123,7 @@ def keep_telegram_handler_open(updater, ):
 
 def receive_activemq_messages(updater, ):
 
-    conn = get_activemq_subscriber(
-        updater.bot.sendMessage, read_message_from_file, keys.FILE_NAME, keys.FILE_LOCATION)
+    conn = get_activemq_subscriber(updater.bot.sendMessage)
 
     print("MessageBroker (ActiveMQ Receiver) started ...")
     while 1:

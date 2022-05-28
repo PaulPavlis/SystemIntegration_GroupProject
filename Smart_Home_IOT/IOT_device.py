@@ -27,8 +27,9 @@ class MyIOTListener(stomp.ConnectionListener):
         new_line = "\n"
         return f"Brightness: {json_dict['brightness']}{new_line}Colour: {json_dict['colour_hexadecimal']}{new_line}Special Effect: {json_dict['special_effect']}"
 
-    def get_return_json(self):
+    def get_return_json(self, telegram_id):
         return {
+            "telegram_id": telegram_id,
             "message": f"IOT Device {self.name} updated."
         }
 
@@ -36,13 +37,14 @@ class MyIOTListener(stomp.ConnectionListener):
         print(f"Received ActiveMQ message (Header): {header}")
         print(f"Received ActiveMQ message (Body): {body}")
 
-        config_text = self.parse_json_to_text(json.loads(body))
+        message_body = json.loads(body)
+        config_text = self.parse_json_to_text(message_body['data'])
         time.sleep(random.randint(1, 2))
         write_message_to_file("config.txt",
                               "Smart_Home_IOT\\" + str(self.name).replace(" ", ""), config_text)
         print(f"Changed IOT device according to message.")
 
-        json_message = self.get_return_json()
+        json_message = self.get_return_json(message_body['telegram_id'])
         json_string = json.dumps(json_message)
         send_message_2_queue(keys.HOST, keys.PORT,
                              keys.USER, keys.PASSWORD, keys.PUBLISH_TOPIC, json_string)

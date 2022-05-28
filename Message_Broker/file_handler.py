@@ -10,11 +10,11 @@ def write_message_to_file(file_name="lamp_config.txt", path="", text=""):
     file_handler.close()
 
 
-def read_message_from_file(file_name, path):
-    if not os.path.exists(path):
-        return "Path does not exist."
+# def read_message_from_file(file_name, path):
+#     if not os.path.exists(path):
+#         return "Path does not exist."
 
-    file_handler = open(os.path.join(path, file_name), "r")
-    current_chat_id = file_handler.read()
-    file_handler.close()
-    return current_chat_id
+#     file_handler = open(os.path.join(path, file_name), "r")
+#     current_chat_id = file_handler.read()
+#     file_handler.close()
+#     return current_chat_id
