@@ -66,10 +66,6 @@ def get_send_details(user_message):
 
 def handle_message(update, context):
 
-    if update.message.chat_id is not None:
-        write_message_to_file(
-            keys.FILE_NAME, keys.FILE_LOCATION, update.message.chat_id)
-
     user_message = str(update.message.text).lower()
 
     print(f"Received Telegram message: {user_message}")
