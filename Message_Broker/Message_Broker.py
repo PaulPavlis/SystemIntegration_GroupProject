@@ -7,6 +7,7 @@ import _thread
 import time
 from activemq_subscribe_handler import get_activemq_subscriber
 from file_handler import write_message_to_file  # , read_message_from_file
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 
 
 def get_json_message_lamp(brightness=100, colour_hexa="FFFFFF", effect=""):
@@ -97,10 +98,6 @@ def handle_message(update, context):
 
 
 def start_command(update, context):
-
-    if update.message.chat_id is not None:
-        write_message_to_file(
-            keys.FILE_NAME, keys.FILE_LOCATION, update.message.chat_id)
 
     update.message.reply_text("Hello, I am the System Integration Bot.")
 
