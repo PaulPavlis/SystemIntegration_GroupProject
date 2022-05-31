@@ -106,7 +106,7 @@ def start_command(update, context):
 
 
 def help_command(update, context):
-    update.message.reply_text("No help for you ._.")
+    update.message.reply_text("I relay your commands to the SmartHome message broker.\nimplemented commands:\n<itemclass> <item id> <action> [<colour>, <effect>]\n\n  itemclass: lamp\n  item id: numeric id or 'all'\n  action: on | off | brightness in percent (0 equals off, 100 equals on)\n  colour: RGB colour in 6 digit hex representation.\n          E.g. FFFFFF for white, or FF0000 for red\n  effect: none | blink | pulse | strobe\n\nexamples:\n  # lamp 2 to shine 100% brightness in blue colour\n  lamp 2 on 0000FF\n\n  # lamp 1 to shine at 75% brightness in red colour and pulsing from 0-75 brightness\n  lamp 1 75 FF0000 pulse\n\n  # turn off all lamps\n  lamp all off\n\n")
 
 
 def error(update, context):
