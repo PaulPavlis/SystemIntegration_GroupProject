@@ -1,6 +1,6 @@
 # Requirements
 
-Tested with: (stomp.py did not work with the newest version for me)
+Tested with (stomp.py did not work with the newest version for me):
 
 ```
 python-telegram-bot==13.11
